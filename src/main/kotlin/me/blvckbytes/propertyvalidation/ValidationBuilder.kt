@@ -7,18 +7,12 @@ class ValidationBuilder {
 
   private val failedValidators = mutableListOf<Validator<*>>()
 
-  fun addValidatorIf(validator: ApplicableValidator<*>, condition: () -> Boolean): ValidationBuilder {
-    if (!condition())
-      return this
-
-    return addValidator(validator)
-  }
-
-  fun addValidatorIf(validator: ApplicableValidator<*>, condition: Boolean): ValidationBuilder {
+  inline fun callIf(condition: Boolean, executable: ValidationBuilder.() -> Unit): ValidationBuilder {
     if (!condition)
       return this
 
-    return addValidator(validator)
+    executable(this)
+    return this
   }
 
   fun addValidator(validator: ApplicableValidator<*>): ValidationBuilder {
